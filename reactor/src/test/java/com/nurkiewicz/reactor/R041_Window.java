@@ -115,7 +115,7 @@ public class R041_Window {
 
 		//when
 		//TODO operator here
-		final Flux<Long> fps = null;
+		final Flux<Long> fps = frames.window(Duration.ofSeconds(1)).flatMap(Flux::count);
 
 		//then
 		fps
