@@ -92,7 +92,10 @@ public class R041_Window {
 		final Flux<String> words = Flux.just(LoremIpsum.words()).take(14);
 
 		//when
-		final Flux<String> third = words;
+		final Flux<String> third = words
+				.skip(2)
+				.window(1, 3)
+				.flatMap(it->it);
 
 		//then
 		assertThat(third.collectList().block())
