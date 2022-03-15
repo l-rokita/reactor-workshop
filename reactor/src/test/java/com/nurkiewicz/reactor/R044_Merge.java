@@ -59,7 +59,7 @@ public class R044_Merge {
 	}
 
 	private CacheServer first = new CacheServer("foo.com", ofMillis(20), 0);
-	private CacheServer second = new CacheServer("bar.com", ofMillis(20), 0);
+	private CacheServer second = new CacheServer("bar.com", ofMillis(2000), 0);
 
 	/**
 	 * TODO Fetch data from first available cache server.
@@ -75,7 +75,9 @@ public class R044_Merge {
 		final Mono<String> sv = second.findBy(42);
 
 		//when
-		Mono<String> fastest = null; // TODO
+		//Mono<String> fastest = Flux.merge(fv,sv).next(); // TODO
+		//Mono<String> fastest = Mono.firstWithSignal(fv, sv); // TODO
+		Mono<String> fastest = fv.mergeWith(sv).next(); // TODO
 
 		//then
 		fastest
