@@ -100,7 +100,7 @@ public class R010_LetsMeetMono {
 	public void cachingMonoComputesOnlyOnce() throws Exception {
 		//given
 		AtomicInteger counter = new AtomicInteger();
-		final Mono<Integer> lazy = Mono.fromCallable(counter::incrementAndGet);
+		final Mono<Integer> lazy = Mono.fromCallable(counter::incrementAndGet).cache();
 
 		//when
 		lazy.block();
