@@ -25,9 +25,14 @@ public class R046_Timeout {
 	@Test
 	public void timeout() throws Exception {
 		//given
-		final Mono<Long> withTimeout = Mono.delay(ofMillis(200));
+		final Mono<Long> withTimeout = Mono
+				.delay(ofMillis(200))
+				.timeout(Duration.ofMillis(100), Mono.just(-1L));
 
 		//when
+		//final Mono<Long> withFallback = withTimeout
+		//		.onErrorReturn(-1L);
+
 		final Mono<Long> withFallback = withTimeout;
 
 		//then
