@@ -15,6 +15,7 @@ import com.nurkiewicz.reactor.user.User;
 import com.nurkiewicz.reactor.user.UserOrders;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
@@ -146,7 +147,9 @@ public class R032_AdvancedFiltering {
         final Flux<String> words = Flux.just(LoremIpsum.words());
 
         //when
-        final Flux<String> filtered = words;
+        //asyncSha256(s)
+        final Flux<String> filtered = words
+                .filterWhen(shaStartsWithZero());
 
         //then
         filtered
@@ -154,6 +157,11 @@ public class R032_AdvancedFiltering {
                 .expectNext("ipsum")
                 .expectNextCount(9)
                 .verifyComplete();
+    }
+
+    private Function<String, Publisher<Boolean>> shaStartsWithZero() {
+        return it -> asyncSha256(it)
+                .map(hash -> hash.toString().startsWith("0"));
     }
 
     /**
