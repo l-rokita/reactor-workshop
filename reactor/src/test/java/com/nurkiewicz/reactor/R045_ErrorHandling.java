@@ -140,7 +140,7 @@ public class R045_ErrorHandling {
 	@Test
 	public void fixEagerMono() throws Exception {
 		//given
-		final Mono<User> mono = broken();
+		final Mono<User> mono = Mono.defer(this::broken);
 
 		//when
 		final Mono<User> retried = mono.retry();
