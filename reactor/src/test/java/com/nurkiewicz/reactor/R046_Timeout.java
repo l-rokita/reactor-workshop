@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+import reactor.util.retry.Retry;
+import reactor.util.retry.RetryBackoffSpec;
 
 import static java.time.Duration.ofMillis;
 import static java.time.Duration.ofSeconds;
@@ -56,6 +58,9 @@ public class R046_Timeout {
 		//when
 		final Mono<String> withTimeouts = cacheServer
 				.findBy(1)
+				.timeout(Duration.ofMillis(80))
+				.retry()
+				.timeout(Duration.ofSeconds(5))
 				//TODO Operators here
 				;
 
