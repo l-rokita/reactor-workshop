@@ -25,7 +25,6 @@ import java.util.function.Supplier;
 import static java.time.Duration.ofMillis;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Ignore
 public class R034_Distinct {
 
 	private static final Logger log = LoggerFactory.getLogger(R034_Distinct.class);

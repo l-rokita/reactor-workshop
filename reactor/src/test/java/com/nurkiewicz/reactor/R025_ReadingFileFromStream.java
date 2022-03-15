@@ -15,7 +15,6 @@ import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Ignore
 public class R025_ReadingFileFromStream {
 
 	private static final Logger log = LoggerFactory.getLogger(R025_ReadingFileFromStream.class);

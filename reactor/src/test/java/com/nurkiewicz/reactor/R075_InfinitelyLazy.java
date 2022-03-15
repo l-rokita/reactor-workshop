@@ -15,7 +15,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@Ignore
 public class R075_InfinitelyLazy {
 
     public static final Instant[] T = new Instant[]{
@@ -45,7 +44,6 @@ public class R075_InfinitelyLazy {
     }
 
     @Test
-    @Ignore
     public void test_27() throws Exception {
         //given
 

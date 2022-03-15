@@ -15,7 +15,6 @@ import reactor.test.StepVerifier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Ignore
 public class R041_Window {
 
 	private static final Logger log = LoggerFactory.getLogger(R041_Window.class);

@@ -20,7 +20,6 @@ import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Ignore
 public class R054_Parallel {
 
 	private static final Logger log = LoggerFactory.getLogger(R054_Parallel.class);

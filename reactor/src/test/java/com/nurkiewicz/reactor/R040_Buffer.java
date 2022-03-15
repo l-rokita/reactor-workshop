@@ -18,7 +18,6 @@ import reactor.test.StepVerifier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Ignore
 public class R040_Buffer {
 
 	private static final Logger log = LoggerFactory.getLogger(R040_Buffer.class);

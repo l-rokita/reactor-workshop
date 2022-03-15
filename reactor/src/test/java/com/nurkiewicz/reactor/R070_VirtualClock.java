@@ -11,7 +11,6 @@ import reactor.core.publisher.Mono;
 import static java.time.Duration.ofSeconds;
 import static reactor.test.StepVerifier.withVirtualTime;
 
-@Ignore
 public class R070_VirtualClock {
 
 	private static final Logger log = LoggerFactory.getLogger(R070_VirtualClock.class);

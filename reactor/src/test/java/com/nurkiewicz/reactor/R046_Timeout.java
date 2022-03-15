@@ -14,7 +14,6 @@ import reactor.test.StepVerifier;
 import static java.time.Duration.ofMillis;
 import static java.time.Duration.ofSeconds;
 
-@Ignore
 public class R046_Timeout {
 
 	private static final Logger log = LoggerFactory.getLogger(R046_Timeout.class);

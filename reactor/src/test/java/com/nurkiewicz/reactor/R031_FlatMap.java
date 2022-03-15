@@ -24,7 +24,6 @@ import static java.time.Month.JANUARY;
 import static java.time.Month.MARCH;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Ignore
 public class R031_FlatMap {
 
 	private static final Logger log = LoggerFactory.getLogger(R031_FlatMap.class);

@@ -19,7 +19,6 @@ import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Ignore
 public class R043_Zip {
 
 	private static final Logger log = LoggerFactory.getLogger(R043_Zip.class);

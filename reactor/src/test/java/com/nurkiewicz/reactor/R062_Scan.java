@@ -13,7 +13,6 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 import reactor.util.function.Tuple2;
 
-@Ignore
 public class R062_Scan {
 
     private static final Logger log = LoggerFactory.getLogger(R062_Scan.class);

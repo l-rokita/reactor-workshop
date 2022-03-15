@@ -10,7 +10,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
 
-@Ignore
 public class R010_LetsMeetMono {
 
 	/**

@@ -15,7 +15,6 @@ import reactor.test.StepVerifier;
 
 import static java.time.Duration.ofMillis;
 
-@Ignore
 public class R044_Merge {
 
 	private static final Logger log = LoggerFactory.getLogger(R044_Merge.class);

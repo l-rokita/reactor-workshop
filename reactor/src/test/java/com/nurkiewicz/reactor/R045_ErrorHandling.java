@@ -19,7 +19,7 @@ import reactor.util.retry.RetryBackoffSpec;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Ignore
+
 public class R045_ErrorHandling {
 
 	private static final Logger log = LoggerFactory.getLogger(R045_ErrorHandling.class);

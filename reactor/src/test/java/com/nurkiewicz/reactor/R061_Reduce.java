@@ -11,7 +11,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-@Ignore
 public class R061_Reduce {
 
     private static final Logger log = LoggerFactory.getLogger(R061_Reduce.class);

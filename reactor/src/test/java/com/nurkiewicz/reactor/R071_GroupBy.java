@@ -22,7 +22,6 @@ import static java.util.stream.Collectors.toSet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static reactor.util.function.Tuples.of;
 
-@Ignore
 public class R071_GroupBy {
 
     private static final Logger log = LoggerFactory.getLogger(R071_GroupBy.class);

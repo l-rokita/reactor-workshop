@@ -21,7 +21,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-@Ignore
 public class R032_AdvancedFiltering {
 
 	private static final Logger log = LoggerFactory.getLogger(R032_AdvancedFiltering.class);
