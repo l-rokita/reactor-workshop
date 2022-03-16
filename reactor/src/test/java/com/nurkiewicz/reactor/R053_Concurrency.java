@@ -156,12 +156,11 @@ public class R053_Concurrency {
 		//given
 		final Flux<Domain> domains = Domains.all();
 
-		//when
-		Flux<Html> responses = null; // TODO
-		final Flux<Tuple2<URI, Html>> tuples = Flux.zip(
-				domains.map(Domain::getUri),
-				responses
-		);
+        //when
+        final Flux<Tuple2<URI, Html>> tuples = Flux.zip(
+                domains.map(Domain::getUri),
+                domains.flatMapSequential(Crawler::crawlAsync)
+        );
 
 		//then
 		final List<Tuple2<URI, Html>> list = tuples
