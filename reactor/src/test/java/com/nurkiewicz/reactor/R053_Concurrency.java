@@ -21,12 +21,13 @@ import reactor.core.scheduler.Schedulers;
 import reactor.util.function.Tuple2;
 import reactor.util.function.Tuples;
 
+import static com.nurkiewicz.reactor.domains.Crawler.crawlAsync;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class R053_Concurrency {
 
 	private static final Logger log = LoggerFactory.getLogger(R053_Concurrency.class);
-
+    Scheduler scheduler = Schedulers.newBoundedElastic(10, 200, "Crawler");
 	/**
 	 * TODO Crawl 500 domains as soon as possible.
 	 * <p>
@@ -38,7 +39,6 @@ public class R053_Concurrency {
 	@Test(timeout = 10_000L)
 	public void crawlConcurrently() throws Exception {
 		//given
-        Scheduler scheduler = Schedulers.newBoundedElastic(10, 200, "Crawler");
         final Flux<Domain> domains = Domains
 				.all()
 				.doOnSubscribe(s -> log.info("About to load file"));
@@ -70,7 +70,8 @@ public class R053_Concurrency {
 		final Flux<Domain> domains = Domains.all();
 
 		//when
-		final Flux<Tuple2<URI, Html>> tuples = null; // TODO
+        final Flux<Tuple2<URI, Html>> tuples = domains
+                .flatMap(domain -> Mono.just(domain.getUri()).zipWith(crawlAsync(domain))); // TODO
 
 		//then
 		final List<Tuple2<URI, Html>> list = tuples
@@ -97,7 +98,14 @@ public class R053_Concurrency {
 		final Flux<Domain> domains = Domains.all();
 
 		//when
-		final Mono<Map<URI, Html>> mapStream = null; // TODO
+        //final Flux<Tuple2<URI, Html>> tuples = domains
+        //                .flatMap(domain -> Mono.just(domain.getUri()).zipWith(crawlAsync(domain))); // TODO
+		final Mono<Map<URI, Html>> mapStream = domains
+                .flatMap((Domain domain) ->
+                        Crawler.crawlAsync(domain)
+                                .map(html -> Tuples.of(domain.getUri(), html))
+                )
+                .collectMap(Tuple2::getT1, Tuple2::getT2);
 
 		//then
 		final Map<URI, Html> map = mapStream.block();
@@ -126,7 +134,10 @@ public class R053_Concurrency {
 				.all();
 
 		//when
-		final Flux<Html> htmls = null; // TODO
+		final Flux<Html> htmls = domains
+                .flatMap(
+                        domain -> Mono.fromCallable(() -> Crawler.crawlThrottled(domain))
+                                .subscribeOn(scheduler), 50);
 
 		//then
 		final List<String> strings = htmls.map(Html::getRaw).collectList().block();
