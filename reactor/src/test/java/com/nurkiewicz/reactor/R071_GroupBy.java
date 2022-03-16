@@ -17,6 +17,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.GroupedFlux;
 import reactor.test.StepVerifier;
 import reactor.util.function.Tuple2;
+import reactor.util.function.Tuples;
 
 import static java.util.stream.Collectors.toSet;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -112,7 +113,15 @@ public class R071_GroupBy {
         final Flux<Domain> domains = Domains.all();
 
         //when
-        final Flux<Tuple2<Tld, Long>> tldToTotalLinkingRootDomains = null; //TODO
+        Flux<GroupedFlux<Tld, Domain>> groupedFluxFlux = domains
+                .groupBy(Domain::getTld);
+        final Flux<Tuple2<Tld, Long>> tldToTotalLinkingRootDomains = domains
+                .groupBy(Domain::getTld)
+                .flatMap(tld -> tld
+                        .map(Domain::getLinkingRootDomains)
+                        .reduce(Long::sum)
+                        .map(count -> of(tld.key(), count)))
+                .sort(Comparator.comparing(Tuple2::getT2, Comparator.reverseOrder())); //TODO
 
         //then
         tldToTotalLinkingRootDomains
