@@ -4,6 +4,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.Duration;
+import java.util.Collections;
 import java.util.concurrent.Semaphore;
 
 import com.google.common.collect.ImmutableList;
@@ -58,7 +59,7 @@ public class Crawler {
 	 * @see Mono#justOrEmpty(Object)
 	 */
 	public static Flux<URI> outgoingLinks(URI url) {
-		return Flux.empty();
+        return Flux.fromIterable(OUTGOING.getOrDefault(url, ImmutableList.of()));
 	}
 
 	private static final ImmutableMap<URI, ImmutableList<URI>> OUTGOING = links();

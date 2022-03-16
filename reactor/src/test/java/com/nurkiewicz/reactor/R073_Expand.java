@@ -112,7 +112,7 @@ public class R073_Expand {
         final URI init = new URI("https://google.com");
 
         //when
-        final Flux<URI> allUris = null; // TODO
+        final Flux<URI> allUris = Flux.just(init).expand(Crawler::outgoingLinks); // TODO
 
         //then
         allUris
