@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
 import reactor.util.function.Tuple2;
 import reactor.util.function.Tuples;
 
@@ -23,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class R054_Parallel {
 
 	private static final Logger log = LoggerFactory.getLogger(R054_Parallel.class);
-
+	Scheduler scheduler = Schedulers.newBoundedElastic(100, 200, "Crawler");
 	/**
 	 * TODO Crawl 500 domains as soon as possible using {@link Flux#parallel()} operator.
 	 * Use {@link Crawler#crawlBlocking(Domain)}
@@ -36,7 +38,11 @@ public class R054_Parallel {
 		final Flux<Domain> domains = Domains.all();
 
 		//when
-		final Flux<Html> htmls = null; // TODO
+		final Flux<Html> htmls = domains
+				.parallel(500)
+				.runOn(scheduler)
+				.map(Crawler::crawlBlocking)
+				.sequential(); // TODO
 
 		//then
 		final List<String> strings = htmls.map(Html::getRaw).collectList().block();
