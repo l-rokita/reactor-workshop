@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
 import reactor.util.function.Tuple2;
 import reactor.util.function.Tuples;
 
@@ -37,14 +38,20 @@ public class R053_Concurrency {
 	@Test(timeout = 10_000L)
 	public void crawlConcurrently() throws Exception {
 		//given
-		final Flux<Domain> domains = Domains
+        Scheduler scheduler = Schedulers.newBoundedElastic(10, 200, "Crawler");
+        final Flux<Domain> domains = Domains
 				.all()
 				.doOnSubscribe(s -> log.info("About to load file"));
 
 		//when
-		final Flux<Html> htmls = null; // TODO
+        final Flux<Html> htmls = domains
+                .flatMap(
+                        domain -> Mono.fromCallable(() -> Crawler.crawlBlocking(domain))
+                                .subscribeOn(scheduler)
+                ); // TODO
 
-		//then
+
+        //then
 		final List<String> strings = htmls.map(Html::getRaw).collectList().block();
 		assertThat(strings)
 				.hasSize(500)
