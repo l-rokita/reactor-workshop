@@ -90,7 +90,12 @@ public class R046_Timeout {
 		CacheServer second = new CacheServer("bar", ofMillis(100), 0.5);
 
 		//when
-		final Mono<String> response = null;
+        final Mono<String> response = Mono.firstWithValue(
+                first.findBy(1),
+                second.findBy(1)
+                        .doOnError(e-> log.info("Sorry, something is no yes", e))
+                        .delaySubscription(ofMillis(200))
+        );
 
 		//then
 		response
