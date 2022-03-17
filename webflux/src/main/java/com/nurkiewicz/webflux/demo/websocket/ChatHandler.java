@@ -8,6 +8,9 @@ import reactor.core.publisher.Mono;
 import org.springframework.web.reactive.socket.WebSocketHandler;
 import org.springframework.web.reactive.socket.WebSocketMessage;
 import org.springframework.web.reactive.socket.WebSocketSession;
+import reactor.core.publisher.Sinks;
+
+import java.time.Duration;
 
 /**
  * TODO
@@ -21,13 +24,23 @@ import org.springframework.web.reactive.socket.WebSocketSession;
  */
 public class ChatHandler implements WebSocketHandler {
 
-	private static final Logger log = LoggerFactory.getLogger(ChatHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(ChatHandler.class);
 
-	//TODO Use some Sink here
+    final Sinks.Many<String> sink = Sinks.many().replay().limit(5);
 
-	@Override
-	public Mono<Void> handle(WebSocketSession session) {
-		return session.send(Flux.empty());
-	}
+    @Override
+    public Mono<Void> handle(WebSocketSession session) {
+        session.receive()
+                .map(WebSocketMessage::getPayloadAsText)
+                .doOnNext(x -> log.info("[{}] Received: '{}'", session.getId(), x))
+                .subscribe(sink::tryEmitNext);
+
+        return session.send(
+                sink
+                        .asFlux()
+                        .doOnNext(x -> log.info("[{}] Sending: '{}'", session.getId(), x))
+                        .map(session::textMessage)
+        );
+    }
 
 }
