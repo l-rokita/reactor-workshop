@@ -1,6 +1,7 @@
 package com.nurkiewicz.webflux.demo.emojis;
 
 import java.net.URI;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -40,7 +41,13 @@ public class EmojiController {
 
     @GetMapping(value = "/emojis/rps", produces = TEXT_EVENT_STREAM_VALUE)
     Flux<Long> rps() {
-        return Flux.empty();
+       return webClient
+                .get()
+                .uri(emojiTrackerUrl)
+                .retrieve()
+                .bodyToFlux(ServerSentEvent.class)
+                .window(Duration.ofSeconds(1))
+                .flatMap(Flux::count);
     }
 
     @GetMapping(value = "/emojis/eps", produces = TEXT_EVENT_STREAM_VALUE)
