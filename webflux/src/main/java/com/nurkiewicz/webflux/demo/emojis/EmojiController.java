@@ -2,10 +2,13 @@ package com.nurkiewicz.webflux.demo.emojis;
 
 import java.net.URI;
 import java.time.Duration;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.core.ParameterizedTypeReference;
 import reactor.core.publisher.Flux;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -41,7 +44,7 @@ public class EmojiController {
 
     @GetMapping(value = "/emojis/rps", produces = TEXT_EVENT_STREAM_VALUE)
     Flux<Long> rps() {
-       return webClient
+        return webClient
                 .get()
                 .uri(emojiTrackerUrl)
                 .retrieve()
@@ -52,7 +55,14 @@ public class EmojiController {
 
     @GetMapping(value = "/emojis/eps", produces = TEXT_EVENT_STREAM_VALUE)
     Flux<Integer> eps() {
-        return Flux.empty();
+        return webClient
+                .get()
+                .uri(emojiTrackerUrl)
+                .retrieve()
+                .bodyToFlux(new ParameterizedTypeReference<Map<String, Integer>>() {})
+                .flatMapIterable(Map::values)
+                .window(Duration.ofSeconds(1))
+                .flatMap(count->count.reduce(Integer::sum));
     }
 
     @GetMapping(value = "/emojis/aggregated", produces = TEXT_EVENT_STREAM_VALUE)
@@ -85,10 +95,10 @@ public class EmojiController {
 
     String keysAsOneString(Map<String, Integer> m) {
         return m
-            .keySet()
-            .stream()
-            .map(EmojiController::codeToEmoji)
-            .collect(Collectors.joining());
+                .keySet()
+                .stream()
+                .map(EmojiController::codeToEmoji)
+                .collect(Collectors.joining());
     }
 
     static String codeToEmoji(String hex) {
