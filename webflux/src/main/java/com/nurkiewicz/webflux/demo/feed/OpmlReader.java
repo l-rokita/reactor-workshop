@@ -16,6 +16,8 @@ import reactor.core.publisher.Flux;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 @Component
 public class OpmlReader {
@@ -27,7 +29,11 @@ public class OpmlReader {
     }
 
     public Flux<Outline> allFeedsStream() {
-        return Flux.empty();
+        //todo(my) poeksperymentowac z fluxem
+        return Mono
+                .fromCallable(this::allFeeds)
+                .subscribeOn(Schedulers.newBoundedElastic(10, 100, "Opml-Feed-Scheduler"))
+                .flatMapIterable(it->it);
     }
 
     public List<Outline> allFeeds() throws FeedException, IOException {

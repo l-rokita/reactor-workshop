@@ -1,6 +1,8 @@
 package com.nurkiewicz.webflux.demo.feed;
 
+import com.rometools.rome.feed.synd.SyndEntry;
 import org.springframework.data.annotation.Id;
+import reactor.core.publisher.Mono;
 
 import java.net.URI;
 import java.time.Instant;
@@ -29,6 +31,15 @@ public class Article {
 
     public String getTitle() {
         return title;
+    }
+
+    public static Mono<Article> from(SyndEntry entry) {
+        return Mono.fromCallable(() -> {
+            if (entry == null || entry.getPublishedDate() == null) {
+                return null;
+            }
+            return new Article(new URI(entry.getLink()), entry.getPublishedDate().toInstant(), entry.getTitle());
+        });
     }
 
     @Override

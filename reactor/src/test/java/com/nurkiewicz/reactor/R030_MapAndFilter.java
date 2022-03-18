@@ -12,7 +12,8 @@ import java.util.function.Predicate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class R030_MapAndFilter {
+public class
+R030_MapAndFilter {
 
 	private static final Logger log = LoggerFactory.getLogger(R030_MapAndFilter.class);
 

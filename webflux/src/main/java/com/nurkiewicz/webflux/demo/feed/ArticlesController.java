@@ -6,7 +6,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Sinks;
+import reactor.core.scheduler.Schedulers;
 
+import java.time.Duration;
+
+import static java.time.Duration.ofSeconds;
 import static org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE;
 
 @RestController
@@ -24,7 +29,7 @@ public class ArticlesController {
      */
     @GetMapping("/newest/{limit}")
     Flux<Article> newest(@PathVariable int limit) {
-        return Flux.empty();
+        return articlesStream.getNewest(limit);
     }
 
     /**
@@ -32,7 +37,8 @@ public class ArticlesController {
      */
     @GetMapping(value = "/newest-stream", produces = TEXT_EVENT_STREAM_VALUE)
     Flux<Article> streamNew() {
-        return Flux.empty();
+        return Flux.concat(articlesStream.getNewest(10),
+                articlesStream.getQueue().asFlux());
     }
 
 }
